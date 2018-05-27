@@ -12132,6 +12132,7 @@ Human Faces detected in dog files:  12.0
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Question 2:</strong> This algorithmic choice necessitates that we communicate to the user that we accept human images only when they provide a clear view of a face (otherwise, we risk having unneccessarily frustrated users!). In your opinion, is this a reasonable expectation to pose on the user? If not, can you think of a way to detect humans in images that does not necessitate an image with a clearly presented face?</p>
 <p><strong>Answer:</strong></p>
+<p>I believe this is a reasonable expectation to pose on the user. However, using one more pretrainedd xml file which classifies eyes will be able to give better face detection classification.</p>
 <p>We suggest the face detector from OpenCV as a potential way to detect human images in your algorithm, but you are free to explore other approaches, especially approaches that make use of deep learning :).  Please use the code cell below to design and test your own face detection algorithm.  If you decide to pursue this <em>optional</em> task, report performance on each of the datasets.</p>
 
 </div>
@@ -12525,6 +12526,28 @@ Dog Faces detected in dog files:  100.0
 <p><img src="images/sample_cnn.png" alt="Sample CNN"></p>
 <p><strong>Question 4:</strong> Outline the steps you took to get to your final CNN architecture and your reasoning at each step.  If you chose to use the hinted architecture above, describe why you think that CNN architecture should work well for the image classification task.</p>
 <p><strong>Answer:</strong></p>
+<p>I chose what was described in the image, but I wanted to add another convolutional layer</p>
+<p>Step 1. since the target size was (224,224), we need to start with this input size.
+model.add(Conv2D(filters=16, kernel_size=2, padding='same', activation='relu', 
+                        input_shape=(224, 224, 3)))
+Step 2. our input size is divided in have by using MaxPooling2D function
+model.add(MaxPooling2D(pool_size=2))</p>
+<p>Step 3. Repeat the process until filter gets till 128. There is no reason why I went to filter size 128.
+I experimented with 64 and 256, but I thought this was the most resonable filter size.
+model.add(Conv2D(filters=32, kernel_size=2, padding='same', activation='relu'))
+model.add(MaxPooling2D(pool_size=2))</p>
+<p>model.add(Conv2D(filters=64, kernel_size=2, padding='same', activation='relu'))
+model.add(MaxPooling2D(pool_size=2))</p>
+<p>model.add(Conv2D(filters=128, kernel_size=2, padding='same', activation='relu'))
+model.add(MaxPooling2D(pool_size=2))</p>
+<p>Step 4. We drop it down to 40% of our paramenters and flattened it<br>
+model.add(Dropout(0.4))
+model.add(Flatten())</p>
+<p>Step 5. We apply relu function, drop down to another 40% since parameters are too huge and apply softmax function 
+to get the result
+model.add(Dense(500, activation='relu'))
+model.add(Dropout(0.4))
+model.add(Dense(133, activation='softmax'))</p>
 
 </div>
 </div>
@@ -13172,7 +13195,8 @@ test_{network} = bottleneck_features['test']</code></pre>
 
 </code></pre>
 <p><strong>Question 5:</strong> Outline the steps you took to get to your final CNN architecture and your reasoning at each step.  Describe why you think the architecture is suitable for the current problem.</p>
-<p><strong>Answer:</strong></p>
+<p><strong>Answer:</strong> 
+The model uses the the pre-trained VGG-19 model as a fixed feature extractor, where the last convolutional output of VGG-19 is fed as input to our model. It needs to equipped with softmax activation in the end, so I used it. Otherwise, I pretty much used VGG-19 bottleneck features to define my architecture and it is already precomputed.</p>
 
 </div>
 </div>
@@ -13677,6 +13701,7 @@ Epoch 00040: val_loss did not improve from 5.11923
 <h3 id="(IMPLEMENTATION)-Test-Your-Algorithm-on-Sample-Images!">(IMPLEMENTATION) Test Your Algorithm on Sample Images!<a class="anchor-link" href="#(IMPLEMENTATION)-Test-Your-Algorithm-on-Sample-Images!">&#182;</a></h3><p>Test your algorithm at least six images on your computer.  Feel free to use any images you like.  Use at least two human and two dog images.</p>
 <p><strong>Question 6:</strong> Is the output better than you expected :) ?  Or worse :( ?  Provide at least three possible points of improvement for your algorithm.</p>
 <p><strong>Answer:</strong></p>
+<p>Yes the output is better than what I actually expected. To improve my algorithm, I need to test more datasets. However, this is pretrained architecture from VGG19, so it didn't have any errors. I also need to have more epochs so it can be trained with more repetitions. I can only think of two for now to improve my algorithm.</p>
 
 </div>
 </div>
